@@ -23,6 +23,11 @@ app.use(cors({
   origin:'https://se-lancer-mine-frontend.vercel.app' ||  'http://localhost:3000',
   credentials: true
 }));
+
+// app.use(cors({
+//   origin:'http://localhost:3000',
+//   credentials: true
+// }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 

@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 import User from '../models/User.js';
 import { successResponse, errorResponse } from '../utils/apiResponse.js';
+import { generateAvatar } from '../utils/generateAvatar.js';
 
 const generateToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -8,33 +9,35 @@ const generateToken = (id) => {
   });
 };
 
+
 export const register = async (req, res, next) => {
   try {
     const { name, email, password, role } = req.body;
 
-    // Check if user exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return errorResponse(res, 400, 'User already exists with this email');
     }
 
-    // Create user
+    // Generate avatar if no profile picture
+    const avatar = generateAvatar(name);
+
     const user = await User.create({
       name,
       email,
       password,
-      role: role || 'brand'
+      role: role || 'brand',
+      profilePicture: avatar
     });
-
-    // const token = generateToken(user._id);
 
     successResponse(res, 201, 'User registered successfully', {
       user: {
         id: user._id,
         name: user.name,
         email: user.email,
-        role: user.role
-      },
+        role: user.role,
+        profilePicture: user.profilePicture
+      }
     });
   } catch (error) {
     next(error);
