@@ -1,3 +1,4 @@
+// utils/generateAvatar.js
 import { createCanvas } from 'canvas';
 
 const colors = [
@@ -6,25 +7,25 @@ const colors = [
   '#f39c12', '#d35400', '#8e44ad', '#2c3e50'
 ];
 
-export const generateAvatar = (name) => {
+export const generateAvatar = (name = '?') => {
   const canvas = createCanvas(200, 200);
   const ctx = canvas.getContext('2d');
 
-  // Pick a random color
+  // Random color
   const bgColor = colors[Math.floor(Math.random() * colors.length)];
   ctx.fillStyle = bgColor;
   ctx.fillRect(0, 0, 200, 200);
 
-  // Text setup
+  // Extract first letter (ignores spaces)
+  const firstLetter = name.trim().charAt(0).toUpperCase() || '?';
+
+  // Text settings
   ctx.font = 'bold 100px Arial';
   ctx.fillStyle = '#ffffff';
   ctx.textAlign = 'center';
   ctx.textBaseline = 'middle';
-
-  // First letter of name
-  const firstLetter = name ? name.charAt(0).toUpperCase() : '?';
   ctx.fillText(firstLetter, 100, 110);
 
-  // Return as base64 URL
-  return canvas.toDataURL();
+  // Return Base64 data URL
+  return canvas.toDataURL('image/png');
 };
